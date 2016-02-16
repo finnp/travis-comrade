@@ -1,0 +1,21 @@
+{
+  "name": "travis-girder",
+  "version": "1.0.0",
+  "description": "Status bar for travis",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "travis"
+  ],
+  "author": "Finn Pauls",
+  "license": "ISC",
+  "dependencies": {
+    "configstore": "^1.4.0",
+    "delegate-dom": "0.0.1",
+    "menubar": "^4.0.2",
+    "request": "^2.69.0",
+    "virtual-dom": "^2.1.1"
+  }
+}

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+    body {
+      font-family: Helvetica, sans-serif;
+    }
+
+    ul, li {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    li span {
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
+    }
+
+    h2 {
+      color: #777;
+    }
+
+    h4 {
+      color: #999;
+    }
+
+    .tgl {
+      display: none;
+    }
+    .tgl, .tgl:after, .tgl:before, .tgl *, .tgl *:after, .tgl *:before, .tgl + .tgl-btn {
+      box-sizing: border-box;
+    }
+    .tgl::-moz-selection, .tgl:after::-moz-selection, .tgl:before::-moz-selection, .tgl *::-moz-selection, .tgl *:after::-moz-selection, .tgl *:before::-moz-selection, .tgl + .tgl-btn::-moz-selection {
+      background: none;
+    }
+    .tgl::selection, .tgl:after::selection, .tgl:before::selection, .tgl *::selection, .tgl *:after::selection, .tgl *:before::selection, .tgl + .tgl-btn::selection {
+      background: none;
+    }
+    .tgl + .tgl-btn {
+      background: #fbfbfb;
+      border-radius: 2em;
+      padding: 2px;
+      -webkit-transition: all .4s ease;
+      transition: all .4s ease;
+      border: 1px solid #e8eae9;
+      outline: 0;
+      display: inline-block;
+      vertical-align: middle;
+      width: 4em;
+      height: 2em;
+      position: relative;
+      cursor: pointer;
+      -webkit-user-select: none;
+         -moz-user-select: none;
+          -ms-user-select: none;
+              user-select: none;
+    }
+    .tgl + .tgl-btn:after, .tgl + .tgl-btn:before {
+      position: relative;
+      display: block;
+      content: "";
+      width: 50%;
+      height: 100%;
+    }
+    .tgl + .tgl-btn:after {
+      left: 0;
+    }
+    .tgl + .tgl-btn:before {
+      display: none;
+    }
+    .tgl:checked + .tgl-btn:after {
+      left: 50%;
+    }
+
+    .tgl + .tgl-btn:after {
+      border-radius: 2em;
+      background: #fbfbfb;
+      -webkit-transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), padding 0.3s ease, margin 0.3s ease;
+      transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), padding 0.3s ease, margin 0.3s ease;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 4px 0 rgba(0, 0, 0, 0.08);
+    }
+    .tgl + .tgl-btn:hover:after {
+      will-change: padding;
+    }
+    .tgl + .tgl-btn:active {
+      box-shadow: inset 0 0 0 2em #e8eae9;
+    }
+    .tgl + .tgl-btn:active:after {
+      padding-right: .8em;
+    }
+    .tgl:checked + .tgl-btn {
+      background: #56B19F;
+    }
+    .tgl:checked + .tgl-btn:active {
+      box-shadow: none;
+    }
+    .tgl:checked + .tgl-btn:active:after {
+      margin-left: -.8em;
+    }
+
+    button {
+      background-color: #56B19F;
+      width: 100%;
+      border: none;
+      margin-bottom: 20px;
+      font-size: 20px;
+      color: white;
+      line-height: 30px;
+      box-shadow: rgba(0, 0, 0, 0.258824) 0px 2px 5px 0px;
+    }
+    button:active {
+        box-shadow: rgba(0, 0, 0, 0.258824) 0px 0px 0px 0px;
+    }
+    .repo {
+      padding-left: 20px;
+    }
+
+    </style>
+    <title></title>
+  </head>
+  <body><script src="renderer.js"></script></body>
+</html>
