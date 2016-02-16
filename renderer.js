@@ -4,19 +4,36 @@ var patch = require('virtual-dom/patch')
 var createElement = require('virtual-dom/create-element')
 var ipc = require('electron').ipcRenderer
 var delegate = require('delegate-dom')
+var fuzzy = require('fuzzy')
 
-require('remote').getCurrentWindow().toggleDevTools()
+// require('remote').getCurrentWindow().toggleDevTools()
 
 var data = {
   repos: [],
-  syncing: false
+  syncing: false,
+  search: ''
 }
 function render () {
-  var repos = data.repos
-  return h('div', [
-    h('button', (data.syncing ? 'Syncing...' : 'Sync Travis with GitHub.')),
-    h('ul', repos.map(function (repo, index) {
-      return h('li', [
+  var children = [
+    h('button', (data.syncing ? 'Syncing...' : 'Sync Travis with GitHub')),
+    h('input.search')
+  ]
+
+  if (data.repos.length > 0) {
+    var repos = data.repos
+    if (data.search.length > 0) {
+      var results = fuzzy.filter(data.search, repos, {
+        extract: function (repo) {
+          return repo.name
+        }
+      })
+      repos = results.map(function (r) {
+        return r.original
+      })
+    }
+
+    var repoList = h('ul', repos.map(function (repo, index) {
+      return h('li', {key: repo.id}, [
         h('span', [
           h('img', {
             style: {visibility: repo.loading ? 'visible' : 'hidden'},
@@ -34,7 +51,14 @@ function render () {
         h('span.repo', repo.owner_name + '/' + repo.name)
       ])
     }))
-  ])
+    children.push(repoList)
+  } else {
+    children.push(h('img', {
+      src: 'loading.gif'
+    }))
+  }
+
+  return h('div', children)
 }
 
 var tree = render()
@@ -70,8 +94,6 @@ ipc.on('stopload', function (e, repoId) {
   update()
 })
 
-ipc.send('loaded')
-
 delegate.on(rootNode, 'button', 'click', function (e) {
   data.syncing = true
   update()
@@ -81,3 +103,10 @@ ipc.on('syncdone', function () {
   data.syncing = false
   update()
 })
+
+delegate.on(rootNode, 'input.search', 'keyup', function (e) {
+  data.search = e.target.value
+  update()
+})
+
+ipc.send('loaded')

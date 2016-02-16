@@ -40,10 +40,8 @@ mb.on('ready', function () {
     })
   })
   ipc.on('loaded', function (event) {
-    console.log('load')
     request.get(reposReq, function (err, res, body) {
       if (err) dialog.showErrorBox('error', err.message)
-      console.log('send hooks')
       event.sender.send('list', body.hooks)
     })
   })
