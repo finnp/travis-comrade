@@ -52,7 +52,7 @@ function ready () {
 
   function getRepos () {
     var reposReq = {
-      url: 'https://api.travis-ci.org/hooks?all=true&owner_name=finnp',
+      url: 'https://api.travis-ci.org/hooks?all=true',
       headers: travisHeaders,
       json: true
     }
