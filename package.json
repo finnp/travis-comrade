@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
+    "zip": "cd TravisComrade-darwin-x64 && ditto -c -k --sequesterRsrc --keepParent TravisComrade.app TravisComrade.app.zip",
     "build": "electron-packager . 'TravisComrade' --platform=darwin --arch=x64 --version=0.36.7 --overwrite --icon img/travis.icns",
-    "release": "electron-release --template notes.md --app TravisComrade-darwin-x64/TravisComrade.app --token $GH_TOKEN"
+    "release": "publish-release --notes notes.md --assets TravisComrade-darwin-x64/TravisComrade.app.zip --token $GH_TOKEN"
   },
   "keywords": [
     "travis",
@@ -21,12 +22,12 @@
     "electron-default-menu": "^0.1.1",
     "fuzzy": "^0.1.1",
     "menubar": "^4.0.2",
+    "publish-release": "^1.2.0",
     "request": "^2.69.0",
     "virtual-dom": "^2.1.1"
   },
   "devDependencies": {
-    "electron-prebuilt": "^0.36.7",
-    "electron-release": "^2.2.0"
+    "electron-prebuilt": "^0.36.7"
   },
   "repository": {
     "type": "git",
