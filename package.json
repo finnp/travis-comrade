@@ -1,6 +1,6 @@
 {
   "name": "travis-comrade",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Status bar for travis",
   "main": "index.js",
   "scripts": {
