@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
     "build": "electron-packager . 'TravisComrade' --platform=darwin --arch=x64 --version=0.36.7 --overwrite --icon img/travis.icns",
-    "publish": "publish-release --assets TravisComrade.zip"
+    "release": "electron-release --app TravisComrade-darwin-x64/TravisComrade.app --token $GH_TOKEN"
   },
   "keywords": [
     "travis",
@@ -26,6 +26,14 @@
   },
   "devDependencies": {
     "electron-prebuilt": "^0.36.7",
-    "publish-release": "^1.2.0"
-  }
+    "electron-release": "^2.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/finnp/travis-comrade.git"
+  },
+  "bugs": {
+    "url": "https://github.com/finnp/travis-comrade/issues"
+  },
+  "homepage": "https://github.com/finnp/travis-comrade#readme"
 }
