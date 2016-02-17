@@ -20,7 +20,7 @@ var data = {
 }
 
 function renderLogin () {
-  return h('div', {key: 'login'}, [
+  return h('div.login', {key: 'login'}, [
     h('h2', 'GitHub token'),
     h('div', [
       'Provide a ',
