@@ -1,1 +1,2 @@
-- Added missing dependency
+- Fix toggling repositories the first time you use the app
+- Add links to travis ci pages
