@@ -11,6 +11,7 @@ var Menu = electron.Menu
 
 var mb = menubar({
   dir: __dirname,
+  width: 450,
   icon: path.join(__dirname, 'img', 'travis-inactive.png')
 })
 

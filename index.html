@@ -6,6 +6,7 @@
     body {
       width: 100%;
       font-family: Helvetica, sans-serif;
+      margin: 0px;
     }
 
     ul, li {
@@ -13,6 +14,11 @@
       margin: 0;
       padding: 0;
     }
+
+    ul {
+      margin-bottom: 50px;
+    }
+
     li span {
       display: inline-block;
       height: 100%;
@@ -106,6 +112,9 @@
     button:active {
         box-shadow: rgba(0, 0, 0, 0.258824) 0px 0px 0px 0px;
     }
+    button:focus {
+      outline:none;
+    }
     .repo {
       padding-left: 20px;
     }
@@ -115,11 +124,18 @@
     }
 
     input {
-      width: 100%;
+      width: 83%;
       line-height: 20px;
       font-size: 14px;
+      margin-top: 5px;
       margin-bottom: 15px;
+      margin-left: 5%;
     }
+
+    input:focus {
+      outline:none;
+    }
+
     .search {
       background-image: url('img/search.svg');
       padding-left: 24px;
@@ -140,12 +156,25 @@
       width: 50%;
     }
 
+    .loading {
+      margin-top: 20px;
+      margin-left: 45%;
+    }
+
     .save {
       background-color: #56B19F;
     }
 
     .quit {
       background-color: #DC5753;
+    }
+
+    .login {
+      margin-left: 5%;
+    }
+
+    .github {
+      margin-left: 0;
     }
 
     </style>
