@@ -1,13 +1,18 @@
 {
-  "name": "travis-girder",
+  "name": "travis-comrade",
   "version": "1.0.0",
   "description": "Status bar for travis",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "build": "electron-packager . 'TravisComrade' --platform=darwin --arch=x64 --version=0.36.7 --overwrite --icon img/travis.icns",
+    "publish": "publish-release --assets TravisComrade.zip"
   },
   "keywords": [
-    "travis"
+    "travis",
+    "helper",
+    "menubar"
   ],
   "author": "Finn Pauls",
   "license": "ISC",
@@ -18,5 +23,9 @@
     "menubar": "^4.0.2",
     "request": "^2.69.0",
     "virtual-dom": "^2.1.1"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "^0.36.7",
+    "publish-release": "^1.2.0"
   }
 }

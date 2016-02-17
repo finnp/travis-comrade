@@ -8,8 +8,6 @@ var shell = electron.shell
 var delegate = require('delegate-dom')
 var fuzzy = require('fuzzy')
 
-// require('remote').getCurrentWindow().toggleDevTools()
-
 var data = {
   repos: [],
   syncing: false,
@@ -25,14 +23,19 @@ function renderLogin () {
       ' to continue'
     ]),
     h('input.github'),
-    h('button.save', 'Save')
+    h('footer', [
+      h('button.quit', 'Quit'),
+      h('button.save', 'Save')
+    ])
   ])
 }
 
 function render () {
   var children = [
-    h('button.sync', (data.syncing ? 'Syncing...' : 'Sync Travis with GitHub')),
-    h('input.search')
+    h('header', [
+      h('button.sync', (data.syncing ? 'Syncing...' : 'Sync Travis with GitHub')),
+      h('input.search')
+    ])
   ]
 
   if (data.repos.length > 0) {
@@ -53,7 +56,7 @@ function render () {
         h('span', [
           h('img', {
             style: {visibility: repo.loading ? 'visible' : 'hidden'},
-            src: 'loading.gif'
+            src: 'img/loading.gif'
           })
         ]),
         h('input.tgl', {
@@ -70,11 +73,14 @@ function render () {
     children.push(repoList)
   } else {
     children.push(h('img', {
-      src: 'loading.gif'
+      src: 'img/loading.gif'
     }))
   }
 
-  children.push(h('button.logout', 'Logout'))
+  children.push(h('footer', [
+    h('button.quit', 'Quit'),
+    h('button.logout', 'Logout')
+  ]))
 
   return h('div', {key: 'main'}, children)
 }
@@ -141,6 +147,10 @@ delegate.on(document, 'button.logout', 'click', function () {
 delegate.on(document, 'a', 'click', function (e) {
   e.preventDefault()
   shell.openExternal(e.target.href)
+})
+
+delegate.on(document, 'button.quit', 'click', function () {
+  ipc.send('quit')
 })
 
 ipc.send('loaded')

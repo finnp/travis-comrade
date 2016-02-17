@@ -11,7 +11,7 @@ var Menu = electron.Menu
 
 var mb = menubar({
   dir: __dirname,
-  icon: path.join(__dirname, 'travis-inactive.png')
+  icon: path.join(__dirname, 'img', 'travis-inactive.png')
 })
 
 var configFile = path.join(app.getPath('userData'), 'config.json')
@@ -80,11 +80,9 @@ function ready () {
       event.sender.send('stopload', repoId)
     })
   })
-  ipc.on('debug', function (event, log) {
-    console.log(log)
-  })
+
   ipc.on('sync', function (event) {
-    mb.tray.setImage(path.join(__dirname, 'travis.png'))
+    mb.tray.setImage(path.join(__dirname, 'img', 'travis.png'))
     var syncReq = {
       url: 'https://api.travis-ci.org/users/sync',
       headers: travisHeaders
@@ -99,7 +97,7 @@ function ready () {
       function loopWhileSync () {
         request.get(loopReq, function (err, res, body) {
           if (!err && body.user.is_syncing) return loopWhileSync()
-          mb.tray.setImage(path.join(__dirname, 'travis-inactive.png'))
+          mb.tray.setImage(path.join(__dirname, 'img', 'travis-inactive.png'))
           getRepos()
           event.sender.send('syncdone')
         })
@@ -113,6 +111,10 @@ ipc.on('logout', function () {
   fs.unlink(configFile, function () {
     renderer.send('login')
   })
+})
+
+ipc.on('quit', function () {
+  app.quit()
 })
 
 function getToken (githubToken) {
