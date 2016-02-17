@@ -2,27 +2,58 @@ var menubar = require('menubar')
 var path = require('path')
 var request = require('request')
 var electron = require('electron')
+var fs = require('fs')
 var ipc = electron.ipcMain
 var dialog = electron.dialog
+var app = electron.app
 
 var mb = menubar({
   dir: __dirname,
   icon: path.join(__dirname, 'travis-inactive.png')
 })
 
-var travisToken = process.env['TRAVIS_TOKEN']
+var configFile = path.join(app.getPath('userData'), 'config.json')
+
+var renderer
 
 mb.on('ready', function () {
+  ipc.on('loaded', function (event) {
+    renderer = event.sender // can you get this another way?
+    ready()
+  })
+})
+
+function ready () {
+  var config = {}
+  try {
+    config = JSON.parse(fs.readFileSync(configFile))
+  } catch (e) {}
+
+  var travisToken = config.travisToken
+  if (!travisToken) {
+    renderer.send('login')
+    ipc.on('githubkey', function (e, key) {
+      getToken(key)
+    })
+    return
+  }
+
   var travisHeaders = {
     'Accept': 'application/vnd.travis-ci.2+json',
     'Authorization': 'token ' + travisToken,
     'User-Agent': 'travis-girder'
   }
+
   var reposReq = {
     url: 'https://api.travis-ci.org/hooks?all=true&owner_name=finnp',
     headers: travisHeaders,
     json: true
   }
+  request.get(reposReq, function (err, res, body) {
+    if (err) dialog.showErrorBox('error', err.message)
+    renderer.send('list', body.hooks)
+  })
+
   ipc.on('toggle', function (event, repoId, checked) {
     var hookReq = {
       url: 'https://api.travis-ci.org/hooks/' + repoId,
@@ -37,12 +68,6 @@ mb.on('ready', function () {
     request.put(hookReq, function (err, res, body) {
       if (err) dialog.showErrorBox('error', err.message)
       event.sender.send('stopload', repoId)
-    })
-  })
-  ipc.on('loaded', function (event) {
-    request.get(reposReq, function (err, res, body) {
-      if (err) dialog.showErrorBox('error', err.message)
-      event.sender.send('list', body.hooks)
     })
   })
   ipc.on('debug', function (event, log) {
@@ -71,26 +96,29 @@ mb.on('ready', function () {
       loopWhileSync()
     })
   })
-})
+}
 
-//
-// function getToken (githubToken) {
-//   var opts = {
-//     url: 'https://api.travis-ci.org/auth/github',
-//     headers: {
-//       'User-Agent': 'Oghliner',
-//       'Accept': 'application/vnd.travis-ci.2+json'
-//     },
-//     body: {
-//       'github_token': githubToken
-//     },
-//     method: 'POST',
-//     json: true
-//   }
-//   console.log('req')
-//   request(opts, function (err, res, body) {
-//     if (err) return dialog.showErrorBox('error', err.message)
-//     console.log(res.statusCode)
-//     console.log(body)
-//   })
-// }
+function getToken (githubToken) {
+  var opts = {
+    url: 'https://api.travis-ci.org/auth/github',
+    headers: {
+      'User-Agent': 'Oghliner',
+      'Accept': 'application/vnd.travis-ci.2+json'
+    },
+    body: {
+      'github_token': githubToken
+    },
+    method: 'POST',
+    json: true
+  }
+  request(opts, function (err, res, body) {
+    if (res.statusCode !== 200) err = new Error(body)
+    if (err) return dialog.showErrorBox('Login failed', err.message)
+    var config = {
+      travisToken: body.access_token
+    }
+    fs.writeFile(configFile, JSON.stringify(config), function () {
+      ready()
+    })
+  })
+}

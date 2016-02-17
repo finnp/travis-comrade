@@ -13,9 +13,19 @@ var data = {
   syncing: false,
   search: ''
 }
+
+function renderLogin () {
+  return h('div', {key: 'login'}, [
+    h('h2', 'GitHub token'),
+    h('div', 'Provide a GitHub token to continue.'),
+    h('input.github'),
+    h('button.save', 'Save')
+  ])
+}
+
 function render () {
   var children = [
-    h('button', (data.syncing ? 'Syncing...' : 'Sync Travis with GitHub')),
+    h('button.sync', (data.syncing ? 'Syncing...' : 'Sync Travis with GitHub')),
     h('input.search')
   ]
 
@@ -58,15 +68,15 @@ function render () {
     }))
   }
 
-  return h('div', children)
+  return h('div', {key: 'main'}, children)
 }
 
 var tree = render()
 var rootNode = createElement(tree)
 document.body.appendChild(rootNode)
 
-function update () {
-  var newTree = render()
+function update (renderFn) {
+  var newTree = renderFn ? renderFn() : render()
   var patches = diff(tree, newTree)
   rootNode = patch(rootNode, patches)
   tree = newTree
@@ -74,6 +84,9 @@ function update () {
 ipc.on('list', function (event, repos) {
   data.repos = repos
   update()
+})
+ipc.on('login', function () {
+  update(renderLogin)
 })
 
 delegate.on(rootNode, 'ul li input', 'change', function (e) {
@@ -94,7 +107,7 @@ ipc.on('stopload', function (e, repoId) {
   update()
 })
 
-delegate.on(rootNode, 'button', 'click', function (e) {
+delegate.on(document, 'button.sync', 'click', function (e) {
   data.syncing = true
   update()
   ipc.send('sync')
@@ -104,9 +117,13 @@ ipc.on('syncdone', function () {
   update()
 })
 
-delegate.on(rootNode, 'input.search', 'keyup', function (e) {
+delegate.on(document, 'input.search', 'keyup', function (e) {
   data.search = e.target.value
   update()
+})
+
+delegate.on(document, 'button.save', 'click', function (e) {
+  ipc.send('githubkey', document.querySelector('.github').value)
 })
 
 ipc.send('loaded')

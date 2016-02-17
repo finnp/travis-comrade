@@ -12,7 +12,6 @@
   "author": "Finn Pauls",
   "license": "ISC",
   "dependencies": {
-    "configstore": "^1.4.0",
     "delegate-dom": "0.0.1",
     "fuzzy": "^0.1.1",
     "menubar": "^4.0.2",
