@@ -8,7 +8,7 @@
     "start": "electron .",
     "zip": "cd TravisComrade-darwin-x64 && ditto -c -k --sequesterRsrc --keepParent TravisComrade.app TravisComrade.app.zip",
     "build": "electron-packager . 'TravisComrade' --platform=darwin --arch=x64 --version=0.36.7 --overwrite --icon img/travis.icns",
-    "release": "publish-release --notes notes.md --assets TravisComrade-darwin-x64/TravisComrade.app.zip --token $GH_TOKEN"
+    "release": "publish-release --assets TravisComrade-darwin-x64/TravisComrade.app.zip --token $GH_TOKEN"
   },
   "keywords": [
     "travis",
