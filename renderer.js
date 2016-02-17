@@ -60,7 +60,7 @@ function render () {
       var slug = repo.owner_name + '/' + repo.name
       return h('li', {key: repo.id}, [
         h('span', [
-          h('img.loading', {
+          h('img', {
             style: {visibility: repo.loading ? 'visible' : 'hidden'},
             src: loadingGif
           })
