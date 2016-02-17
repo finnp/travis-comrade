@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
     "build": "electron-packager . 'TravisComrade' --platform=darwin --arch=x64 --version=0.36.7 --overwrite --icon img/travis.icns",
-    "release": "electron-release --app TravisComrade-darwin-x64/TravisComrade.app --token $GH_TOKEN"
+    "release": "electron-release --template notes.md --app TravisComrade-darwin-x64/TravisComrade.app --token $GH_TOKEN"
   },
   "keywords": [
     "travis",
