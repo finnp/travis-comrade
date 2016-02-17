@@ -48,7 +48,7 @@ function render () {
     if (data.search.length > 0) {
       var results = fuzzy.filter(data.search, repos, {
         extract: function (repo) {
-          return repo.name
+          return repo.owner_name + '/' + repo.name
         }
       })
       repos = results.map(function (r) {
