@@ -57,6 +57,7 @@ function render () {
     }
 
     var repoList = h('ul', repos.map(function (repo, index) {
+      var slug = repo.owner_name + '/' + repo.name
       return h('li', {key: repo.id}, [
         h('span', [
           h('img', {
@@ -72,7 +73,9 @@ function render () {
         h('label.tgl-btn', {
           htmlFor: repo.id
         }),
-        h('span.repo', repo.owner_name + '/' + repo.name)
+        h('span.repo',
+          h('a', {href: 'https://travis-ci.org/' + slug}, slug)
+        )
       ])
     }))
     children.push(repoList)
