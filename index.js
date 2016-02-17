@@ -98,6 +98,12 @@ function ready () {
   })
 }
 
+ipc.on('logout', function () {
+  fs.unlink(configFile, function () {
+    renderer.send('login')
+  })
+})
+
 function getToken (githubToken) {
   var opts = {
     url: 'https://api.travis-ci.org/auth/github',

@@ -2,7 +2,9 @@ var h = require('virtual-dom/h')
 var diff = require('virtual-dom/diff')
 var patch = require('virtual-dom/patch')
 var createElement = require('virtual-dom/create-element')
-var ipc = require('electron').ipcRenderer
+var electron = require('electron')
+var ipc = electron.ipcRenderer
+var shell = electron.shell
 var delegate = require('delegate-dom')
 var fuzzy = require('fuzzy')
 
@@ -17,7 +19,11 @@ var data = {
 function renderLogin () {
   return h('div', {key: 'login'}, [
     h('h2', 'GitHub token'),
-    h('div', 'Provide a GitHub token to continue.'),
+    h('div', [
+      'Provide a ',
+      h('a', {href: 'https://github.com/settings/tokens', target: '_blank'}, 'Github access token'),
+      ' to continue'
+    ]),
     h('input.github'),
     h('button.save', 'Save')
   ])
@@ -67,6 +73,8 @@ function render () {
       src: 'loading.gif'
     }))
   }
+
+  children.push(h('button.logout', 'Logout'))
 
   return h('div', {key: 'main'}, children)
 }
@@ -124,6 +132,15 @@ delegate.on(document, 'input.search', 'keyup', function (e) {
 
 delegate.on(document, 'button.save', 'click', function (e) {
   ipc.send('githubkey', document.querySelector('.github').value)
+})
+
+delegate.on(document, 'button.logout', 'click', function () {
+  ipc.send('logout')
+})
+
+delegate.on(document, 'a', 'click', function (e) {
+  e.preventDefault()
+  shell.openExternal(e.target.href)
 })
 
 ipc.send('loaded')
