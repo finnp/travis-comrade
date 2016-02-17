@@ -2,10 +2,12 @@ var menubar = require('menubar')
 var path = require('path')
 var request = require('request')
 var electron = require('electron')
+var defaultMenu = require('electron-default-menu')
 var fs = require('fs')
 var ipc = electron.ipcMain
 var dialog = electron.dialog
 var app = electron.app
+var Menu = electron.Menu
 
 var mb = menubar({
   dir: __dirname,
@@ -17,6 +19,10 @@ var configFile = path.join(app.getPath('userData'), 'config.json')
 var renderer
 
 mb.on('ready', function () {
+  // the menu is needed for copy-paste to work on osx
+  var menu = Menu.buildFromTemplate(defaultMenu())
+  Menu.setApplicationMenu(menu)
+
   ipc.on('loaded', function (event) {
     renderer = event.sender // can you get this another way?
     ready()
@@ -44,15 +50,19 @@ function ready () {
     'User-Agent': 'travis-girder'
   }
 
-  var reposReq = {
-    url: 'https://api.travis-ci.org/hooks?all=true&owner_name=finnp',
-    headers: travisHeaders,
-    json: true
+  function getRepos () {
+    var reposReq = {
+      url: 'https://api.travis-ci.org/hooks?all=true&owner_name=finnp',
+      headers: travisHeaders,
+      json: true
+    }
+    request.get(reposReq, function (err, res, body) {
+      if (err) dialog.showErrorBox('error', err.message)
+      renderer.send('list', body.hooks)
+    })
   }
-  request.get(reposReq, function (err, res, body) {
-    if (err) dialog.showErrorBox('error', err.message)
-    renderer.send('list', body.hooks)
-  })
+
+  getRepos()
 
   ipc.on('toggle', function (event, repoId, checked) {
     var hookReq = {
@@ -90,6 +100,7 @@ function ready () {
         request.get(loopReq, function (err, res, body) {
           if (!err && body.user.is_syncing) return loopWhileSync()
           mb.tray.setImage(path.join(__dirname, 'travis-inactive.png'))
+          getRepos()
           event.sender.send('syncdone')
         })
       }

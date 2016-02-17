@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "delegate-dom": "0.0.1",
+    "electron-default-menu": "^0.1.1",
     "fuzzy": "^0.1.1",
     "menubar": "^4.0.2",
     "request": "^2.69.0",
