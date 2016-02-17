@@ -7,6 +7,11 @@ var ipc = electron.ipcRenderer
 var shell = electron.shell
 var delegate = require('delegate-dom')
 var fuzzy = require('fuzzy')
+var path = require('path')
+
+// require('remote').getCurrentWindow().toggleDevTools()
+
+var loadingGif = path.join(__dirname, 'img', 'loading.gif')
 
 var data = {
   repos: [],
@@ -56,7 +61,7 @@ function render () {
         h('span', [
           h('img', {
             style: {visibility: repo.loading ? 'visible' : 'hidden'},
-            src: 'img/loading.gif'
+            src: loadingGif
           })
         ]),
         h('input.tgl', {
@@ -73,7 +78,7 @@ function render () {
     children.push(repoList)
   } else {
     children.push(h('img', {
-      src: 'img/loading.gif'
+      src: loadingGif
     }))
   }
 
@@ -103,7 +108,7 @@ ipc.on('login', function () {
   update(renderLogin)
 })
 
-delegate.on(rootNode, 'ul li input', 'change', function (e) {
+delegate.on(document, 'ul li input', 'change', function (e) {
   var repoId = Number(e.target.id)
   var repo = data.repos.find(function (repo) {
     return repoId === repo.id
